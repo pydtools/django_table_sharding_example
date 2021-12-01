@@ -1,9 +1,54 @@
-*.pyc
-*~
-
 .DS_Store
-db.sqlite3
+*.swp
+*.pyc
+*.pyo
+*.mo
+*.xml
+*adminx.py
+.coverage
+extra_apps/*.mo
+extra_apps/*.po
+extra_apps/xadmin/
+apps/test_*/
+*/extra_apps/xadmin/
+*.pid
 
-/.idea/
-/.vscode/
-/venv/
+# 数据库文件
+dump.rdb
+*.sqlite3
+
+# 工具相关
+.vscode/
+.idea/*
+*/.idea/*
+*/__pycache__/*
+
+.fabfile.py
+fabfile.py
+Dockerfile
+
+# 虚拟环境
+env/
+venv/
+static/
+fab
+.env/
+.nox/
+
+# 日志相关
+*.log
+logs/*.log
+logs/nohup.*
+
+assets/
+extra_app/admin1
+budao/settings/local.py
+apps/tree/
+apps/rbac/
+apps/rbac
+apps/perms
+
+report.html
+conftest.py
+pylint.conf
+app/logs/
