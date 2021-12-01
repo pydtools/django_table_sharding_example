@@ -58,6 +58,7 @@ class DeviceLog(models.Model, model_sharding.ShardingMixin):
     # Date-based sharding
     SHARDING_TYPE = 'date'
     SHARDING_DATE_START = '2021-12-01'
+    SHARDING_DATE_END = '2031-12-31'
     SHARDING_DATE_FORMAT = '%Y'
 
     def __str__(self):

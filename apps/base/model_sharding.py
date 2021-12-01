@@ -14,6 +14,8 @@ from django.utils import timezone
 SHARDING_COUNT_DEFAULT = getattr(settings, 'SHARDING_COUNT_DEFAULT', 10)
 SHARDING_DATE_START_DEFAULT = getattr(
     settings, 'SHARDING_DATE_START_DEFAULT', '2020-01-01')
+SHARDING_DATE_END_DEFAULT = getattr(
+    settings, 'SHARDING_DATE_START_DEFAULT', '2030-01-01')
 SHARDING_DATE_FORMAT_DEFAULT = getattr(
     settings, 'SHARDING_DATE_FORMAT_DEFAULT', '%Y%m')
 
@@ -163,13 +165,17 @@ class ShardingMixin(object):
 
         date_start = getattr(cls, 'SHARDING_DATE_START',
                              SHARDING_DATE_START_DEFAULT)
-        date_end = timezone.now().date()
-        date_sharding_format = getattr(cls, 'SHARDING_DATE_FORMAT',
-                                       SHARDING_DATE_FORMAT_DEFAULT)
-
         if isinstance(date_start, str):
             date_start = timezone.datetime.strptime(
                 date_start, '%Y-%m-%d').date()
+
+        date_end = getattr(cls, 'SHARDING_DATE_END', timezone.now().date())
+        if isinstance(date_end, str):
+            date_end = timezone.datetime.strptime(
+                date_end, '%Y-%m-%d').date()
+
+        date_sharding_format = getattr(cls, 'SHARDING_DATE_FORMAT',
+                                       SHARDING_DATE_FORMAT_DEFAULT)
 
         while date_start <= date_end:
             if date_sharding_format.endswith('%Y'):
