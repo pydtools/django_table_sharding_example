@@ -1,6 +1,7 @@
 import pprint
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 from apps.base import model_sharding
 
@@ -29,6 +30,8 @@ class Log(models.Model, model_sharding.ShardingMixin):
     level = models.PositiveSmallIntegerField(default=0)
     content = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
+    is_deleted = models.BooleanField(_('is_deleted'),
+                                     default=False, help_text='是否删除')
 
     # Date-based sharding
     SHARDING_TYPE = 'date'
