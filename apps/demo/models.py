@@ -62,7 +62,7 @@ class DeviceLog(models.Model, model_sharding.ShardingMixin):
     SHARDING_DATE_FORMAT = '%Y'
 
     def __str__(self):
-        return "%s %s %s" % (self.time, self.level, self.content)
+        return str(self.id)
 
     class Meta:
         abstract = True
