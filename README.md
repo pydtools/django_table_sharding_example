@@ -58,8 +58,19 @@ init_log_models()
 
 
 ```shell
-(venv) ➜  django_table_sharding_example git:(master) ✗ python manage.py shell_plus
-{'demo_log_2020': <class 'apps.demo.models.Log2020'>,
+(venv) ➜  django_table_sharding_example git:(master) python manage.py shell_plus
+{'demo_device_log_2021': <class 'apps.demo.models.DeviceLog2021'>,
+ 'demo_device_log_2022': <class 'apps.demo.models.DeviceLog2022'>,
+ 'demo_device_log_2023': <class 'apps.demo.models.DeviceLog2023'>,
+ 'demo_device_log_2024': <class 'apps.demo.models.DeviceLog2024'>,
+ 'demo_device_log_2025': <class 'apps.demo.models.DeviceLog2025'>,
+ 'demo_device_log_2026': <class 'apps.demo.models.DeviceLog2026'>,
+ 'demo_device_log_2027': <class 'apps.demo.models.DeviceLog2027'>,
+ 'demo_device_log_2028': <class 'apps.demo.models.DeviceLog2028'>,
+ 'demo_device_log_2029': <class 'apps.demo.models.DeviceLog2029'>,
+ 'demo_device_log_2030': <class 'apps.demo.models.DeviceLog2030'>,
+ 'demo_device_log_2031': <class 'apps.demo.models.DeviceLog2031'>,
+ 'demo_log_2020': <class 'apps.demo.models.Log2020'>,
  'demo_log_2021': <class 'apps.demo.models.Log2021'>,
  'demo_user_0': <class 'apps.demo.models.User0'>,
  'demo_user_1': <class 'apps.demo.models.User1'>,
@@ -72,7 +83,7 @@ init_log_models()
  'demo_user_8': <class 'apps.demo.models.User8'>,
  'demo_user_9': <class 'apps.demo.models.User9'>}
 # Shell Plus Model Imports
-from apps.demo.models import Log2020, Log2021, User0, User1, User2, User3, User4, User5, User6, User7, User8, User9
+from apps.demo.models import DeviceLog2021, DeviceLog2022, DeviceLog2023, DeviceLog2024, DeviceLog2025, DeviceLog2026, DeviceLog2027, DeviceLog2028, DeviceLog2029, DeviceLog2030, DeviceLog2031, Log2020, Log2021, User0, User1, User2, User3, User4, User5, User6, User7, User8, User9
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
@@ -90,8 +101,13 @@ Python 3.7.4 (default, Sep 14 2021, 17:28:29)
 [Clang 10.0.0 (clang-1000.10.44.4)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 (InteractiveConsole)
->>> exit()
-(venv) ➜  django_table_sharding_example git:(master) ✗
+>>> from apps.demo.models import *
+>>> DeviceLog.shard('2021')
+<class 'apps.demo.models.DeviceLog2021'>
+>>> DeviceLog.shard('2021').objects.all()
+<QuerySet [<DeviceLog2021: 1>]>
+>>> 
+
 ```
 
 Links
