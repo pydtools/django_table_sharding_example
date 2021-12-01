@@ -1,3 +1,5 @@
+import pprint
+
 from django.db import models
 
 from apps.base import model_sharding
@@ -31,9 +33,7 @@ def init_user_models():
 
     for sharding in User.get_sharding_list():
         model_sharding.create_model(User, sharding)
-
-
-init_user_models()
+    return
 
 
 class Log(models.Model, model_sharding.ShardingMixin):
@@ -44,7 +44,7 @@ class Log(models.Model, model_sharding.ShardingMixin):
     # Date-based sharding
     SHARDING_TYPE = 'date'
     SHARDING_DATE_START = '2020-03-01'
-    SHARDING_DATE_FORMAT = '%Y%m'
+    SHARDING_DATE_FORMAT = '%Y'
 
     def __str__(self):
         return "%s %s %s" % (self.time, self.level, self.content)
@@ -62,6 +62,15 @@ def init_log_models():
 
     for sharding in Log.get_sharding_list():
         model_sharding.create_model(Log, sharding)
+    return
 
 
-init_log_models()
+def auto_register():
+    # 动态创建Model,同时注册到admin
+    init_user_models()
+    init_log_models()
+    pprint.pprint(model_sharding.shard_tables)
+    return
+
+
+auto_register()

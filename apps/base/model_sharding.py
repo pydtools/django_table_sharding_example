@@ -11,8 +11,10 @@ from django.forms import model_to_dict
 from django.utils import timezone
 
 SHARDING_COUNT_DEFAULT = getattr(settings, 'SHARDING_COUNT_DEFAULT', 10)
-SHARDING_DATE_START_DEFAULT = getattr(settings, 'SHARDING_DATE_START_DEFAULT', '2020-01-01')
-SHARDING_DATE_FORMAT_DEFAULT = getattr(settings, 'SHARDING_DATE_FORMAT_DEFAULT', '%Y%m')
+SHARDING_DATE_START_DEFAULT = getattr(
+    settings, 'SHARDING_DATE_START_DEFAULT', '2020-01-01')
+SHARDING_DATE_FORMAT_DEFAULT = getattr(
+    settings, 'SHARDING_DATE_FORMAT_DEFAULT', '%Y%m')
 
 shard_tables = {}
 admin_opts_map = {}
@@ -29,7 +31,8 @@ def create_model(abstract_model_class, sharding, meta_options=None):
     """Create sharding model which inherit from `abstract_model_class`."""
 
     model_name = abstract_model_class.__name__ + sharding
-    table_name = "%s_%s%s" % (abstract_model_class._meta.app_label, abstract_model_class._meta.db_table, sharding)
+    table_name = "%s_%s%s" % (abstract_model_class._meta.app_label,
+                              abstract_model_class._meta.db_table, sharding)
 
     class Meta:
         db_table = table_name
