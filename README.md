@@ -18,37 +18,6 @@ django启动前，需手动执行一次migration创建初始数库表，django�
 * `SHARDING_DATE_START_DEFAULT`日期分表的通用开始日期，默认为`2020-01-01`
 * `SHARDING_DATE_FORMAT_DEFAULT`日期分表的通用表名日期后缀格式，如：`%Y`、`%Y%m`、`%Y%m%d`，默认为`%Y%m`按月分表
 
-基于固定分片数量的分表(适用于用户表这种数据量大且可估量的场景)
------
-* 定义模型时需设置类属性`SHARDING_TYPE＝'precise'`
-* 如需单独对某个模型设置分表数量，可在定义模型时设置`SHARDING_COUNT`类属性为对应的值。
-
-
-```python
-class User(models.Model, model_sharding.ShardingMixin):
-    name = models.CharField(max_length=20)
-    age = models.IntegerField(default=0)
-    active = models.BooleanField(default=True)
-
-    # Constant-based sharding
-    SHARDING_TYPE = 'precise'
-    SHARDING_COUNT = 10
-
-    class Meta:
-        abstract = True
-        db_table = "user_"
-        
-# 分表模型类初始化
-def init_user_models():
-    admin_opts = {
-        'list_display': ('id', 'name', 'age', 'active')
-    }
-    model_sharding.register_admin_opts(User._meta.label_lower, admin_opts)
-
-    for sharding in User.get_sharding_list():
-        model_sharding.create_model(User, sharding)
-
-init_user_models()
 ```
 
 
@@ -131,3 +100,9 @@ Links
 
 
 * [多个数据库](https://www.codeleading.com/article/95571343611/)
+
+
+
+## admin
+
+![admin](demo.png)
