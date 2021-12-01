@@ -86,13 +86,20 @@ def exec_command(command, app_label):
     cmd_options = vars(options)
     args = cmd_options.pop('args', ())
     cmd.execute(*args, **cmd_options)
+    return
 
 
 class ShardingMixin(object):
     @classmethod
     def shard(cls, sharding_source=None):
+        """
+
+        :param sharding_source:
+        :return:
+        """
         sharding = cls.get_sharding(str(sharding_source))
-        db_table = "%s_%s%s" % (cls._meta.app_label, cls._meta.db_table, sharding)
+        db_table = "%s_%s%s" % (cls._meta.app_label,
+                                cls._meta.db_table, sharding)
         if db_table not in shard_tables:
             create_model(cls, sharding)
 
@@ -106,62 +113,84 @@ class ShardingMixin(object):
 
     @classmethod
     def get_sharding(cls, sharding_source=None):
+        """
+
+        :param sharding_source:
+        :return:
+        """
         sharding_list = cls.get_sharding_list()
         if sharding_source not in sharding_list:
             return cls.default_sharding()
 
+        # 按时间分表
         if getattr(cls, 'SHARDING_TYPE', 'date') == 'date':
             return sharding_source
 
-        return str(int(sharding_source) % int(getattr(cls, 'SHARDING_COUNT', SHARDING_COUNT_DEFAULT)))
+        # 按照数量分表
+        return str(int(sharding_source) % int(
+            getattr(cls, 'SHARDING_COUNT', SHARDING_COUNT_DEFAULT)))
 
     @classmethod
     def get_sharding_list(cls):
         if getattr(cls, 'SHARDING_TYPE', 'date') == 'date':
             return cls.get_date_sharding_list()
 
-        sharding_count = int(getattr(cls, 'SHARDING_COUNT', SHARDING_COUNT_DEFAULT))
+        sharding_count = int(getattr(cls,
+                                     'SHARDING_COUNT', SHARDING_COUNT_DEFAULT))
         return (str(sharding) for sharding in range(sharding_count))
 
     @classmethod
     def get_date_sharding_list(cls):
         """
-        Generate a date sharding sequence of year or month or day, which starts from date setting named
+        Generate a date sharding sequence of year or month or day,
+        which starts from date setting named
         `SHARDING_DATE_START` to ends of current date.
         """
 
-        date_start = getattr(cls, 'SHARDING_DATE_START', SHARDING_DATE_START_DEFAULT)
+        date_start = getattr(cls, 'SHARDING_DATE_START',
+                             SHARDING_DATE_START_DEFAULT)
         date_end = timezone.now().date()
-        date_sharding_format = getattr(cls, 'SHARDING_DATE_FORMAT', SHARDING_DATE_FORMAT_DEFAULT)
+        date_sharding_format = getattr(cls, 'SHARDING_DATE_FORMAT',
+                                       SHARDING_DATE_FORMAT_DEFAULT)
 
         if isinstance(date_start, str):
-            date_start = timezone.datetime.strptime(date_start, '%Y-%m-%d').date()
+            date_start = timezone.datetime.strptime(
+                date_start, '%Y-%m-%d').date()
 
         while date_start <= date_end:
             if date_sharding_format.endswith('%Y'):
                 yield date_start.strftime(date_sharding_format)
-                date_start = date_start.replace(year=date_start.year + 1, day=1)
+                date_start = date_start.replace(
+                    year=date_start.year + 1, day=1)
             elif date_sharding_format.endswith('%d'):
-                _, month_length = calendar.monthrange(date_start.year, date_start.month)
+                _, month_length = calendar.monthrange(
+                    date_start.year, date_start.month)
                 if date_start.day <= month_length:
                     yield date_start.strftime(date_sharding_format)
                     date_start = date_start.replace(day=date_start.day + 1)
-
                 if date_start.day == month_length:
                     yield date_start.strftime(date_sharding_format)
                     next_year, next_month = get_next_year_and_month(date_start)
-                    date_start = date_start.replace(year=next_year, month=next_month, day=1)
+                    date_start = date_start.replace(
+                        year=next_year, month=next_month, day=1)
             else:
                 yield date_start.strftime('%Y%m')
                 next_year, next_month = get_next_year_and_month(date_start)
-                date_start = date_start.replace(year=next_year, month=next_month, day=1)
+                date_start = date_start.replace(
+                    year=next_year, month=next_month, day=1)
 
     @classmethod
     def default_sharding(cls):
-        if getattr(cls, 'SHARDING_TYPE', 'date') == 'date':
-            date_sharding_format = getattr(cls, 'SHARDING_DATE_FORMAT', SHARDING_DATE_FORMAT_DEFAULT)
-            return timezone.now().strftime(date_sharding_format)
+        """
+        默认分表模式:
+            cls.SHARDING_TYPE 是 date, 按照时间分表
 
+        :return:
+        """
+        if getattr(cls, 'SHARDING_TYPE', 'date') == 'date':
+            date_sharding_format = getattr(cls, 'SHARDING_DATE_FORMAT',
+                                           SHARDING_DATE_FORMAT_DEFAULT)
+            return timezone.now().strftime(date_sharding_format)
         return '0'
 
     @classmethod
@@ -173,7 +202,12 @@ class ShardingMixin(object):
 
     @classmethod
     def paginate_sharding(cls, page, page_size):
-        """Paginate the querysets of all shardings."""
+        """
+        Paginate the querysets of all shardings.
+
+        1.统计所有分表的数据总数
+        2.计算分页
+        """
 
         total_count = 0
         sharding_count_map = OrderedDict()
