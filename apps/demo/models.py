@@ -25,17 +25,6 @@ class User(models.Model, model_sharding.ShardingMixin):
         db_table = "user_"
 
 
-def init_user_models():
-    admin_opts = {
-        'list_display': ('id', 'user_name', 'name', 'age', 'active', 'created_at', 'updated_at')
-    }
-    model_sharding.register_admin_opts(User._meta.label_lower, admin_opts)
-
-    for sharding in User.get_sharding_list():
-        model_sharding.create_model(User, sharding)
-    return
-
-
 class Log(models.Model, model_sharding.ShardingMixin):
     level = models.PositiveSmallIntegerField(default=0)
     content = models.TextField()
@@ -54,6 +43,18 @@ class Log(models.Model, model_sharding.ShardingMixin):
         db_table = "log_"
 
 
+def init_user_models():
+    admin_opts = {
+        'list_display': ('id', 'user_name', 'name', 'age', 'active', 'created_at', 'updated_at')
+    }
+    model_sharding.register_admin_opts(User._meta.label_lower, admin_opts)
+
+    for sharding in User.get_sharding_list():
+        model_sharding.create_model(User, sharding,
+                                    module_name="apps.demo.models")
+    return
+
+
 def init_log_models():
     admin_opts = {
         'list_display': ('id', 'time', 'level', 'content')
@@ -61,7 +62,8 @@ def init_log_models():
     model_sharding.register_admin_opts(Log._meta.label_lower, admin_opts)
 
     for sharding in Log.get_sharding_list():
-        model_sharding.create_model(Log, sharding)
+        model_sharding.create_model(Log, sharding,
+                                    module_name="apps.demo.models")
     return
 
 

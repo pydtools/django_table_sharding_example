@@ -87,6 +87,47 @@ def init_log_models():
 init_log_models()
 ```
 
+
+```shell
+(venv) ➜  django_table_sharding_example git:(master) ✗ python manage.py shell_plus
+{'demo_log_2020': <class 'apps.demo.models.Log2020'>,
+ 'demo_log_2021': <class 'apps.demo.models.Log2021'>,
+ 'demo_user_0': <class 'apps.demo.models.User0'>,
+ 'demo_user_1': <class 'apps.demo.models.User1'>,
+ 'demo_user_2': <class 'apps.demo.models.User2'>,
+ 'demo_user_3': <class 'apps.demo.models.User3'>,
+ 'demo_user_4': <class 'apps.demo.models.User4'>,
+ 'demo_user_5': <class 'apps.demo.models.User5'>,
+ 'demo_user_6': <class 'apps.demo.models.User6'>,
+ 'demo_user_7': <class 'apps.demo.models.User7'>,
+ 'demo_user_8': <class 'apps.demo.models.User8'>,
+ 'demo_user_9': <class 'apps.demo.models.User9'>}
+# Shell Plus Model Imports
+from apps.demo.models import Log2020, Log2021, User0, User1, User2, User3, User4, User5, User6, User7, User8, User9
+from django.contrib.admin.models import LogEntry
+from django.contrib.auth.models import Group, Permission, User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.sessions.models import Session
+# Shell Plus Django Imports
+from django.core.cache import cache
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db import transaction
+from django.db.models import Avg, Case, Count, F, Max, Min, Prefetch, Q, Sum, When
+from django.utils import timezone
+from django.urls import reverse
+from django.db.models import Exists, OuterRef, Subquery
+Python 3.7.4 (default, Sep 14 2021, 17:28:29) 
+[Clang 10.0.0 (clang-1000.10.44.4)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> exit()
+(venv) ➜  django_table_sharding_example git:(master) ✗
+```
+
 Links
 -----
 * [[知乎问答] Django 分表 怎么实现？](https://www.zhihu.com/question/43310457)
+
+
+* [多个数据库](https://www.codeleading.com/article/95571343611/)

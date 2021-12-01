@@ -1,5 +1,6 @@
 import calendar
 import math
+import sys
 from collections import OrderedDict
 from importlib import import_module
 
@@ -27,7 +28,16 @@ def get_next_year_and_month(date):
     return date.year, date.month + 1
 
 
-def create_model(abstract_model_class, sharding, meta_options=None):
+def create_model(abstract_model_class, sharding, meta_options=None,
+                 module_name=None):
+    """
+
+    :param abstract_model_class:
+    :param sharding:
+    :param meta_options:
+    :param module_name:  m = sys.modules['apps.demo.models']
+    :return:
+    """
     """Create sharding model which inherit from `abstract_model_class`."""
 
     model_name = abstract_model_class.__name__ + sharding
@@ -56,6 +66,10 @@ def create_model(abstract_model_class, sharding, meta_options=None):
     }
 
     ModelClass = type(model_name, (abstract_model_class,), attrs)
+    # 回写动态模型到模块变量
+    if module_name and module_name in sys.modules:
+        module_var = sys.modules[module_name]
+        setattr(module_var, model_name, ModelClass)
     shard_tables[table_name] = ModelClass
 
     class Admin(admin.ModelAdmin):
